@@ -1,0 +1,19 @@
+trigger:
+- master
+
+pool:
+  vmImage: ubuntu-latest
+
+jobs:
+- job: VerificarDisponibilidad
+  displayName: 'Verificar Disponibilidad'
+  steps:
+  - script: |
+      response=$(curl -s -o /dev/null -w "%{http_code}" https://sprightly-melomakarona-25c8f2.netlify.app/?classId=293389c3-ba93-45f1-bf08-7ba3268ac2e2&assignmentId=7d410fdf-fbc3-4ac9-8221-41c7f5eb2236&submissionId=d3dc6316-4535-6b9c-02b8-d3b7085864f0)
+      if [ "$response" -eq 200 ]; then
+        echo "La aplicación en Netlify está disponible."
+      else
+        echo "¡Error! La aplicación en Netlify no está disponible. Código de respuesta: $response"
+        exit 1
+      fi
+    displayName: 'Verificar disponibilidad de la aplicación en Netlify'
